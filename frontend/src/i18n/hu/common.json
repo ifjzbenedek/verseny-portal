@@ -166,5 +166,31 @@
       "classCount": "Osztályok száma",
       "subjectCount": "Tárgyak száma"
     }
+  },
+  "schedule": {
+    "empty": "Nincs még felvett óra.",
+    "loadError": "Az órarend betöltése sikertelen.",
+    "days": {
+      "MONDAY": "Hétfő",
+      "TUESDAY": "Kedd",
+      "WEDNESDAY": "Szerda",
+      "THURSDAY": "Csütörtök",
+      "FRIDAY": "Péntek"
+    },
+    "daysShort": {
+      "MONDAY": "H",
+      "TUESDAY": "K",
+      "WEDNESDAY": "Sze",
+      "THURSDAY": "Cs",
+      "FRIDAY": "P"
+    },
+    "col": {
+      "day": "Nap",
+      "time": "Idő",
+      "class": "Osztály",
+      "subject": "Tárgy",
+      "teacher": "Tanár",
+      "room": "Terem"
+    }
   }
 }

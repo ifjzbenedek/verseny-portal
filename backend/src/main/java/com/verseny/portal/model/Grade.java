@@ -31,8 +31,9 @@ public class Grade {
     @Column(nullable = false)
     private GradeType type;
 
+    @Builder.Default
     @Column(nullable = false)
-    private Double weight;
+    private Double weight = 1.0;
 
     @Column(length = 1000)
     private String comment;

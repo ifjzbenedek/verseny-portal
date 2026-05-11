@@ -166,5 +166,31 @@
       "classCount": "Classes",
       "subjectCount": "Subjects"
     }
+  },
+  "schedule": {
+    "empty": "No scheduled lessons yet.",
+    "loadError": "Failed to load the schedule.",
+    "days": {
+      "MONDAY": "Monday",
+      "TUESDAY": "Tuesday",
+      "WEDNESDAY": "Wednesday",
+      "THURSDAY": "Thursday",
+      "FRIDAY": "Friday"
+    },
+    "daysShort": {
+      "MONDAY": "Mon",
+      "TUESDAY": "Tue",
+      "WEDNESDAY": "Wed",
+      "THURSDAY": "Thu",
+      "FRIDAY": "Fri"
+    },
+    "col": {
+      "day": "Day",
+      "time": "Time",
+      "class": "Class",
+      "subject": "Subject",
+      "teacher": "Teacher",
+      "room": "Room"
+    }
   }
 }
