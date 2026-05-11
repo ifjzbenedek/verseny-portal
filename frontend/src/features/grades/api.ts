@@ -37,9 +37,7 @@ export function useClassAverage(classId: number | null, subjectId: number | null
   return useQuery({
     enabled: classId !== null && subjectId !== null,
     queryKey:
-      classId && subjectId
-        ? KEYS.classAverage(classId, subjectId)
-        : ['grades', 'avg', 'none'],
+      classId && subjectId ? KEYS.classAverage(classId, subjectId) : ['grades', 'avg', 'none'],
     queryFn: async () => {
       const { data } = await api.get<{
         students: Array<{ studentId: number; studentName: string; average: number; count: number }>;

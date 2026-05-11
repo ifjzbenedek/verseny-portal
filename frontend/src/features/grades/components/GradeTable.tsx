@@ -46,14 +46,20 @@ export function GradeTable({ grades, onDelete, showSubject = true, showActions =
           <TableRow key={g.id}>
             {showSubject && <TableCell>{g.subjectName ?? '—'}</TableCell>}
             <TableCell>
-              <Badge variant={g.value >= 4 ? 'default' : g.value === 1 ? 'destructive' : 'secondary'}>
+              <Badge
+                variant={g.value >= 4 ? 'default' : g.value === 1 ? 'destructive' : 'secondary'}
+              >
                 {g.value}
               </Badge>
             </TableCell>
             <TableCell className="text-muted-foreground">{t(`grades.types.${g.type}`)}</TableCell>
             <TableCell>{g.weight.toFixed(1)}</TableCell>
-            <TableCell className="max-w-xs truncate text-muted-foreground">{g.comment ?? ''}</TableCell>
-            <TableCell className="text-muted-foreground">{dateFmt.format(new Date(g.recordedAt))}</TableCell>
+            <TableCell className="max-w-xs truncate text-muted-foreground">
+              {g.comment ?? ''}
+            </TableCell>
+            <TableCell className="text-muted-foreground">
+              {dateFmt.format(new Date(g.recordedAt))}
+            </TableCell>
             {showActions && (
               <TableCell className="text-right">
                 {onDelete && (

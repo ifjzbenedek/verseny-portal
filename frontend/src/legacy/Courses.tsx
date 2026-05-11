@@ -106,7 +106,9 @@ export default function LegacyCourses() {
 
       {canEdit && (
         <div className="rounded-lg border bg-card p-4">
-          <h3 className="mb-3 text-lg font-semibold">{editingId ? 'Kurzus szerkesztése' : 'Új kurzus'}</h3>
+          <h3 className="mb-3 text-lg font-semibold">
+            {editingId ? 'Kurzus szerkesztése' : 'Új kurzus'}
+          </h3>
           <form className="grid gap-3" onSubmit={submit}>
             <Input
               placeholder="Kód (pl. VIMIAB00)"

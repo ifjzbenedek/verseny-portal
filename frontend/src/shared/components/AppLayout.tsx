@@ -43,20 +43,85 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
-  { to: '/', labelKey: 'nav.dashboard', icon: LayoutDashboard, roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'] },
-  { to: '/grades', labelKey: 'nav.grades', icon: GraduationCap, roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'] },
-  { to: '/subjects', labelKey: 'nav.subjects', icon: BookOpen, roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'] },
-  { to: '/classes', labelKey: 'nav.classes', icon: School, roles: ['OKTATO', 'ADMIN', 'SUPERADMIN'] },
+  {
+    to: '/',
+    labelKey: 'nav.dashboard',
+    icon: LayoutDashboard,
+    roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
+  {
+    to: '/grades',
+    labelKey: 'nav.grades',
+    icon: GraduationCap,
+    roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
+  {
+    to: '/subjects',
+    labelKey: 'nav.subjects',
+    icon: BookOpen,
+    roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
+  {
+    to: '/classes',
+    labelKey: 'nav.classes',
+    icon: School,
+    roles: ['OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
   { to: '/users', labelKey: 'nav.users', icon: Users, roles: ['ADMIN', 'SUPERADMIN'] },
-  { to: '/assignments', labelKey: 'nav.assignments', icon: ListChecks, roles: ['ADMIN', 'SUPERADMIN'] },
-  { to: '/schedule', labelKey: 'nav.schedule', icon: Calendar, roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'] },
-  { to: '/messages', labelKey: 'nav.messages', icon: MessageSquare, roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'] },
-  { to: '/events', labelKey: 'nav.events', icon: CalendarDays, roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'] },
-  { to: '/homework', labelKey: 'nav.homework', icon: ClipboardList, roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'] },
-  { to: '/groups', labelKey: 'nav.groups', icon: UsersRound, roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'] },
-  { to: '/surveys', labelKey: 'nav.surveys', icon: ListChecks, roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'] },
-  { to: '/chat', labelKey: 'nav.chat', icon: Sparkles, roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'] },
-  { to: '/settings', labelKey: 'nav.settings', icon: Settings, roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'] },
+  {
+    to: '/assignments',
+    labelKey: 'nav.assignments',
+    icon: ListChecks,
+    roles: ['ADMIN', 'SUPERADMIN'],
+  },
+  {
+    to: '/schedule',
+    labelKey: 'nav.schedule',
+    icon: Calendar,
+    roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
+  {
+    to: '/messages',
+    labelKey: 'nav.messages',
+    icon: MessageSquare,
+    roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
+  {
+    to: '/events',
+    labelKey: 'nav.events',
+    icon: CalendarDays,
+    roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
+  {
+    to: '/homework',
+    labelKey: 'nav.homework',
+    icon: ClipboardList,
+    roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
+  {
+    to: '/groups',
+    labelKey: 'nav.groups',
+    icon: UsersRound,
+    roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
+  {
+    to: '/surveys',
+    labelKey: 'nav.surveys',
+    icon: ListChecks,
+    roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
+  {
+    to: '/chat',
+    labelKey: 'nav.chat',
+    icon: Sparkles,
+    roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
+  {
+    to: '/settings',
+    labelKey: 'nav.settings',
+    icon: Settings,
+    roles: ['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN'],
+  },
 ];
 
 function initials(name: string) {
@@ -71,10 +136,7 @@ function initials(name: string) {
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const items = useMemo(
-    () => NAV.filter((item) => user && item.roles.includes(user.role)),
-    [user],
-  );
+  const items = useMemo(() => NAV.filter((item) => user && item.roles.includes(user.role)), [user]);
   return (
     <nav className="flex flex-col gap-1 px-2">
       {items.map((item) => {
@@ -121,7 +183,12 @@ export default function AppLayout() {
       <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden" aria-label={t('nav.dashboard')}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              aria-label={t('nav.dashboard')}
+            >
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>

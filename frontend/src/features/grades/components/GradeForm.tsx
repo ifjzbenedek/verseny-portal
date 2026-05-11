@@ -85,7 +85,10 @@ export function GradeForm({ assignmentId, studentId, onSuccess }: Props) {
 
       <div className="space-y-1.5">
         <Label htmlFor="type">{t('grades.type')}</Label>
-        <Select value={currentType} onValueChange={(v) => setValue('type', v as GradeFormValues['type'])}>
+        <Select
+          value={currentType}
+          onValueChange={(v) => setValue('type', v as GradeFormValues['type'])}
+        >
           <SelectTrigger id="type">
             <SelectValue />
           </SelectTrigger>

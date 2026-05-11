@@ -17,12 +17,7 @@ interface AuthState {
   user: AppUser | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (
-    email: string,
-    password: string,
-    fullName: string,
-    role: Role,
-  ) => Promise<void>;
+  register: (email: string, password: string, fullName: string, role: Role) => Promise<void>;
   logout: () => void;
 }
 
@@ -56,23 +51,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     else localStorage.removeItem(TOKEN_KEY);
   }, [token]);
 
-  const applyLoginResponse = useCallback((data: {
-    token: string;
-    email: string;
-    fullName: string;
-    role: Role;
-    id?: number;
-  }) => {
-    const decoded = decodeJwt(data.token);
-    const idFromClaim = typeof decoded?.sub === 'string' ? Number(decoded.sub) : data.id;
-    setToken(data.token);
-    setUser({
-      id: Number.isFinite(idFromClaim) ? (idFromClaim as number) : 0,
-      email: data.email,
-      fullName: data.fullName,
-      role: data.role,
-    });
-  }, []);
+  const applyLoginResponse = useCallback(
+    (data: { token: string; email: string; fullName: string; role: Role; id?: number }) => {
+      const decoded = decodeJwt(data.token);
+      const idFromClaim = typeof decoded?.sub === 'string' ? Number(decoded.sub) : data.id;
+      setToken(data.token);
+      setUser({
+        id: Number.isFinite(idFromClaim) ? (idFromClaim as number) : 0,
+        email: data.email,
+        fullName: data.fullName,
+        role: data.role,
+      });
+    },
+    [],
+  );
 
   const login = useCallback(
     async (email: string, password: string) => {

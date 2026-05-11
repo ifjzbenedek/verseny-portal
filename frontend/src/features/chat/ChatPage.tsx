@@ -64,9 +64,7 @@ export default function ChatPage() {
                 key={m.id}
                 className={cn(
                   'max-w-[80%] rounded-lg px-3 py-2 text-sm',
-                  m.role === 'user'
-                    ? 'ml-auto bg-primary text-primary-foreground'
-                    : 'bg-muted',
+                  m.role === 'user' ? 'ml-auto bg-primary text-primary-foreground' : 'bg-muted',
                 )}
               >
                 {m.text}

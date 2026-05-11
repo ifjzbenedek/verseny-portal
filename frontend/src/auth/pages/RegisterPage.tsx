@@ -76,19 +76,36 @@ export default function RegisterPage() {
           <CardContent className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="fullName">{t('auth.fullName')}</Label>
-              <Input id="fullName" {...register('fullName')} aria-invalid={Boolean(errors.fullName)} />
+              <Input
+                id="fullName"
+                {...register('fullName')}
+                aria-invalid={Boolean(errors.fullName)}
+              />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="email">{t('auth.email')}</Label>
-              <Input id="email" type="email" {...register('email')} aria-invalid={Boolean(errors.email)} />
+              <Input
+                id="email"
+                type="email"
+                {...register('email')}
+                aria-invalid={Boolean(errors.email)}
+              />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="password">{t('auth.password')}</Label>
-              <Input id="password" type="password" {...register('password')} aria-invalid={Boolean(errors.password)} />
+              <Input
+                id="password"
+                type="password"
+                {...register('password')}
+                aria-invalid={Boolean(errors.password)}
+              />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="role">{t('auth.role')}</Label>
-              <Select value={role} onValueChange={(v) => setValue('role', v as 'HALLGATO' | 'OKTATO')}>
+              <Select
+                value={role}
+                onValueChange={(v) => setValue('role', v as 'HALLGATO' | 'OKTATO')}
+              >
                 <SelectTrigger id="role">
                   <SelectValue />
                 </SelectTrigger>
