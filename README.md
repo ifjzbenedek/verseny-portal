@@ -64,3 +64,19 @@ Supabase Postgres + Render (backend) + Vercel (frontend): [DEPLOY.md](DEPLOY.md)
 | Mobil | PWA (vite-plugin-pwa, manifest + service worker) |
 | Auth | JWT (jjwt 0.12) |
 | ORM | Spring Data JPA + Hibernate |
+
+## Dokumentáció
+
+Részletes architektúrális és üzemeltetési doksik a [docs/](docs/) mappában.
+
+- [Architektúrális döntések (ADR)](docs/adr/): a fő technikai választások indoklással.
+- [C4 Container ábra](docs/architecture/c4-container.md): rendszerszintű komponensképet ad.
+- [Szerepkör mátrix](docs/role-matrix.md): ki mit lát, ki mit csinálhat.
+- [Fogalomtár](docs/glossary.md): a kódban szereplő nevek értelmezése.
+
+A fő döntések rövid összefoglalása:
+
+- **Modular monolit Spring Modulith-tal** ([ADR-0001](docs/adr/0001-modular-monolith.md)): a domain erősen összekapcsolt, így ACID tranzakció és egyszerű deploy mellett a modulhatárokat build-time verify tartja egyben.
+- **Chatbot különálló Python service-ként** ([ADR-0002](docs/adr/0002-chatbot-as-microservice.md)): a Python AI ökoszisztémája erősebb, az LLM hívás lassú, és failure isolation kell.
+- **JWT alapú stateless auth** ([ADR-0003](docs/adr/0003-jwt-based-auth.md)): web, mobil és chatbot egységesen használja, a backend stateless marad.
+
