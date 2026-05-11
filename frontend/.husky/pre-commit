@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+# Frontend pre-commit hook. Runs ESLint + Prettier on staged frontend files.
+# Defensive: no-op when frontend/ or lint-staged isn't available, so commits
+# from other workdirs (e.g. backend-only work) aren't blocked.
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+cd "$ROOT/frontend" 2>/dev/null || exit 0
+[ -x node_modules/.bin/lint-staged ] || exit 0
+npx --no-install lint-staged

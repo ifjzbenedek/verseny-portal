@@ -58,7 +58,13 @@
     "no": "Nem",
     "back": "Vissza",
     "comingSoon": "Hamarosan",
-    "stub": "Ez a funkció a párhuzamos backend modulokkal együtt készül el."
+    "stub": "Ez a funkció a párhuzamos backend modulokkal együtt készül el.",
+    "saved": "Mentve",
+    "deleted": "Törölve",
+    "created": "Létrehozva",
+    "deleteConfirm": "Biztosan törlöd?",
+    "previous": "Előző",
+    "next": "Következő"
   },
   "theme": {
     "light": "Világos",
@@ -99,6 +105,48 @@
       "value": "Az érték 1 és 5 között legyen",
       "weight": "A súlynak pozitívnak kell lennie"
     }
+  },
+  "subjects": {
+    "list": "Tárgyak",
+    "name": "Név",
+    "description": "Leírás",
+    "requiredBook": "Kötelező irodalom",
+    "lessonsJson": "Leckék (JSON)",
+    "createdAt": "Létrehozva",
+    "create": "Új tárgy",
+    "edit": "Tárgy szerkesztése"
+  },
+  "classes": {
+    "list": "Osztályok",
+    "startYear": "Kezdés éve",
+    "identifier": "Jelzés",
+    "displayName": "Megjelenítendő név",
+    "createdAt": "Létrehozva",
+    "create": "Új osztály",
+    "edit": "Osztály szerkesztése"
+  },
+  "assignments": {
+    "list": "Tárgyhozzárendelések",
+    "year": "Év",
+    "schoolClass": "Osztály",
+    "subject": "Tárgy",
+    "teacher": "Oktató",
+    "create": "Új hozzárendelés",
+    "delete": "Hozzárendelés törlése",
+    "filters": {
+      "year": "Év szűrő",
+      "classId": "Osztály ID",
+      "teacherId": "Oktató ID"
+    }
+  },
+  "users": {
+    "list": "Hallgatók",
+    "registerUser": "Új felhasználó regisztrálása",
+    "userId": "User ID",
+    "schoolClass": "Osztály",
+    "enrolledAt": "Felvétel",
+    "createStudent": "Hallgató felvétele osztályba",
+    "noStudent": "Nincs hallgatói profil — a HALLGATO szerepkörűeket regisztráció után fel kell venni egy osztályba is."
   },
   "dashboard": {
     "welcome": "Üdv, {{name}}!",

@@ -58,7 +58,13 @@
     "no": "No",
     "back": "Back",
     "comingSoon": "Coming soon",
-    "stub": "This feature will be ready alongside the parallel backend modules."
+    "stub": "This feature will be ready alongside the parallel backend modules.",
+    "saved": "Saved",
+    "deleted": "Deleted",
+    "created": "Created",
+    "deleteConfirm": "Delete this item?",
+    "previous": "Previous",
+    "next": "Next"
   },
   "theme": {
     "light": "Light",
@@ -99,6 +105,48 @@
       "value": "Value must be between 1 and 5",
       "weight": "Weight must be positive"
     }
+  },
+  "subjects": {
+    "list": "Subjects",
+    "name": "Name",
+    "description": "Description",
+    "requiredBook": "Required book",
+    "lessonsJson": "Lessons (JSON)",
+    "createdAt": "Created",
+    "create": "New subject",
+    "edit": "Edit subject"
+  },
+  "classes": {
+    "list": "Classes",
+    "startYear": "Start year",
+    "identifier": "Identifier",
+    "displayName": "Display name",
+    "createdAt": "Created",
+    "create": "New class",
+    "edit": "Edit class"
+  },
+  "assignments": {
+    "list": "Subject assignments",
+    "year": "Year",
+    "schoolClass": "Class",
+    "subject": "Subject",
+    "teacher": "Teacher",
+    "create": "New assignment",
+    "delete": "Delete assignment",
+    "filters": {
+      "year": "Year filter",
+      "classId": "Class ID",
+      "teacherId": "Teacher ID"
+    }
+  },
+  "users": {
+    "list": "Students",
+    "registerUser": "Register new user",
+    "userId": "User ID",
+    "schoolClass": "Class",
+    "enrolledAt": "Enrolled",
+    "createStudent": "Enroll student into class",
+    "noStudent": "No student profile — newly registered HALLGATO accounts must be enrolled in a class."
   },
   "dashboard": {
     "welcome": "Welcome, {{name}}!",
