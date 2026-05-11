@@ -5,6 +5,7 @@ import com.verseny.portal.model.Course;
 import com.verseny.portal.model.Event;
 import com.verseny.portal.model.Grade;
 import com.verseny.portal.model.GradeType;
+import com.verseny.portal.model.Message;
 import com.verseny.portal.model.Role;
 import com.verseny.portal.model.SchoolClass;
 import com.verseny.portal.model.Student;
@@ -13,6 +14,7 @@ import com.verseny.portal.model.SubjectAssignment;
 import com.verseny.portal.repository.CourseRepository;
 import com.verseny.portal.repository.EventRepository;
 import com.verseny.portal.repository.GradeRepository;
+import com.verseny.portal.repository.MessageRepository;
 import com.verseny.portal.repository.SchoolClassRepository;
 import com.verseny.portal.repository.StudentRepository;
 import com.verseny.portal.repository.SubjectAssignmentRepository;
@@ -47,6 +49,7 @@ public class DataSeeder {
                                   SubjectAssignmentRepository assignments,
                                   GradeRepository grades,
                                   EventRepository events,
+                                  MessageRepository messages,
                                   JdbcTemplate jdbc,
                                   PasswordEncoder enc) {
         return args -> {
@@ -152,8 +155,25 @@ public class DataSeeder {
             ensureEvent(events, admin, "Sportnap", "Játékos vetélkedő és csapatsportok.",
                     LocalDateTime.of(2026, 5, 25, 9, 0), null, "Sportpálya");
 
-            log.info("DataSeeder finished. Users={}, classes={}, students={}, subjects={}, assignments={}, grades={}, events={}",
-                    users.count(), classes.count(), students.count(), subjects.count(), assignments.count(), grades.count(), events.count());
+            // --- Sample messages ---
+            if (messages.count() == 0) {
+                ensureMessage(messages, sampleStudentUser, sampleTeacher,
+                        "Tanár Úr, érdeklődnék a holnapi dolgozat témakörei felől.",
+                        LocalDateTime.now().minusDays(2), true);
+                ensureMessage(messages, sampleTeacher, sampleStudentUser,
+                        "Szia, a teljes második fejezet jön, plusz egy könnyebb függvény-feladat.",
+                        LocalDateTime.now().minusDays(2).plusHours(1), false);
+                ensureMessage(messages, sampleTeacher, sampleStudentUser,
+                        "Ha bármi nem világos, írj nyugodtan!",
+                        LocalDateTime.now().minusHours(5), false);
+                ensureMessage(messages, admin, sampleTeacher,
+                        "Kedves Kollega, a holnapi értekezlet 15:00-kor lesz a tanáriban.",
+                        LocalDateTime.now().minusHours(3), false);
+            }
+
+            log.info("DataSeeder finished. Users={}, classes={}, students={}, subjects={}, assignments={}, grades={}, events={}, messages={}",
+                    users.count(), classes.count(), students.count(), subjects.count(), assignments.count(),
+                    grades.count(), events.count(), messages.count());
             // referenced to avoid IDE warnings; the variables capture the seeded admins
             log.debug("Seeded admins: {} / {}", admin.getEmail(), superadmin.getEmail());
         };
@@ -205,6 +225,18 @@ public class DataSeeder {
                         .requiredBook(requiredBook)
                         .lessonsJson(lessonsJson)
                         .build()));
+    }
+
+    private void ensureMessage(MessageRepository messages, AppUser from, AppUser to,
+                                String body, LocalDateTime sentAt, boolean alreadyRead) {
+        Message m = Message.builder()
+                .fromUser(from)
+                .toUser(to)
+                .body(body)
+                .sentAt(sentAt)
+                .readAt(alreadyRead ? sentAt.plusMinutes(10) : null)
+                .build();
+        messages.save(m);
     }
 
     private SubjectAssignment ensureAssignment(SubjectAssignmentRepository assignments,

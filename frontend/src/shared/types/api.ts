@@ -86,6 +86,27 @@ export interface ClassSubjectAverageResponse {
   perStudent: SubjectAverageEntry[];
 }
 
+export interface MessageResponse {
+  id: number;
+  fromUserId: number | null;
+  fromUserName: string | null;
+  toUserId: number | null;
+  toUserName: string | null;
+  body: string;
+  sentAt: string;
+  readAt: string | null;
+}
+
+export interface MessageContact {
+  id: number;
+  fullName: string;
+  role: Role;
+}
+
+export interface UnreadCountResponse {
+  count: number;
+}
+
 export interface ProblemDetails {
   type?: string;
   title?: string;
