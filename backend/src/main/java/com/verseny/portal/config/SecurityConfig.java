@@ -1,6 +1,7 @@
 package com.verseny.portal.config;
 
 import com.verseny.portal.security.JwtAuthFilter;
+import com.verseny.portal.security.ProblemDetailAuthEntryPoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,12 +22,14 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final ProblemDetailAuthEntryPoint problemDetailAuth;
 
     @Value("${app.cors.origins}")
     private String corsOrigins;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, ProblemDetailAuthEntryPoint problemDetailAuth) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.problemDetailAuth = problemDetailAuth;
     }
 
     @Bean
@@ -56,7 +59,12 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/error").permitAll()
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**",
+                        "/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
                 .anyRequest().authenticated())
+            .exceptionHandling(e -> e
+                .authenticationEntryPoint(problemDetailAuth)
+                .accessDeniedHandler(problemDetailAuth))
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
