@@ -139,6 +139,16 @@
       "teacherId": "Oktató ID"
     }
   },
+  "events": {
+    "title": "Cím",
+    "description": "Leírás",
+    "startAt": "Kezdés",
+    "endAt": "Vége",
+    "location": "Helyszín",
+    "create": "Új esemény",
+    "deleteTitle": "Esemény törlése",
+    "deleteDescription": "Biztosan törlöd a(z) \"{{title}}\" eseményt? Ez visszavonhatatlan."
+  },
   "users": {
     "list": "Hallgatók",
     "registerUser": "Új felhasználó regisztrálása",
