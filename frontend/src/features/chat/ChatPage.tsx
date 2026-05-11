@@ -16,6 +16,13 @@ interface ChatMessage {
 const CHATBOT_URL =
   (import.meta.env.VITE_CHATBOT_URL as string | undefined) ?? 'http://localhost:8000';
 
+// In production (not localhost), warn if the chatbot URL hasn't been
+// configured to a public host — the default localhost:8000 cannot work.
+const isLocalhostFallbackInProduction =
+  CHATBOT_URL.includes('localhost') &&
+  typeof window !== 'undefined' &&
+  !['localhost', '127.0.0.1'].includes(window.location.hostname);
+
 export default function ChatPage() {
   const { t } = useTranslation();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -32,6 +39,13 @@ export default function ChatPage() {
     e.preventDefault();
     const text = input.trim();
     if (!text || loading) return;
+    if (isLocalhostFallbackInProduction) {
+      setError(
+        'A chatbot szolgáltatás URL-je nincs beállítva production környezetben. ' +
+          'Állítsd be a VITE_CHATBOT_URL környezeti változót a frontend deploy-on.',
+      );
+      return;
+    }
     setError(null);
     const nextHistory: ChatMessage[] = [...messages, { role: 'user', content: text }];
     setMessages(nextHistory);
@@ -64,6 +78,12 @@ export default function ChatPage() {
   return (
     <>
       <PageHeader title={t('nav.chat')} description="Iskolai AI asszisztens" />
+      {isLocalhostFallbackInProduction && (
+        <div className="mb-4 rounded-md border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-100">
+          A chatbot service URL-je még nincs konfigurálva production-ben.
+          A funkció lokálisan működik a <code>VITE_CHATBOT_URL</code> env var beállítása után.
+        </div>
+      )}
       <Card className="flex h-[60vh] flex-col">
         <CardContent className="flex-1 overflow-y-auto p-4">
           <div className="space-y-3">

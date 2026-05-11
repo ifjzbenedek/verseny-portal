@@ -1,0 +1,32 @@
+# Fly.io config — Spring Boot backend
+# Ha az app név foglalt, írd át a sor végén lévő nevet (globálisan egyedi kell legyen).
+
+app = "verseny-portal-backend"
+primary_region = "fra"  # Frankfurt — közelebb mint az alapértelmezett, gyorsabb response Magyarországról
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  SPRING_PROFILES_ACTIVE = "prod"
+  JWT_EXPIRATION_MS = "86400000"
+  # Spring Boot heap ~256MB-on tight, ez kicsit lazább
+  JAVA_TOOL_OPTIONS = "-XX:MaxRAMPercentage=70 -XX:+UseSerialGC"
+
+[http_service]
+  internal_port = 8081
+  force_https = true
+  auto_stop_machines = "stop"          # 15 perc inaktivitás után alszik (free-friendly)
+  auto_start_machines = true            # első kérés újra ébreszti
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    grace_period = "60s"
+    interval = "30s"
+    method = "GET"
+    timeout = "10s"
+    path = "/api/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"                      # 256mb-on Spring Boot OOM-ozhat; 512 stabil
