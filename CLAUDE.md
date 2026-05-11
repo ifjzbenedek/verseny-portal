@@ -1,65 +1,112 @@
-# Versenynapi runbook — BME VIK Modern Fullstack és Mobil Fejlesztői Verseny
+# Projekt-kontextus Claude Code számára
 
-**Időpont:** 2026-05-11, 18:00–21:00 (3 óra), QBF14-15.
-**Feladat:** Oktatásszervezési digitális portál (BE+DB+FE+mobil), többszereplős auth, GitHub-ra leadva.
-**Pontozás (100p):** funkcionalitás 10 · üzleti logika 10 · mobilitás 10 · architektúra 10 · karbantarthatóság 10 · UX 5 · biztonság 5 · dokumentáció 5 · innováció 5 · (+egyebek).
+**Feladat:** Oktatásszervezési digitális portál (BME VIK Modern Fullstack és Mobil Fejlesztői Verseny).
+**Időkeret:** ~100 óra (több AI agent párhuzamosan dolgozik). A részletes terv a [TERV.md](TERV.md)-ben.
+**Cél:** maximum pont minden értékelési szempontban (kompakt működés, részletes funkcionalitás, szerepkörök, karbantarthatóság, biztonság, UX, dokumentáció).
 
-## Idősáv (javaslat)
+## Architektúra dióhéjban
 
-| Idő | Feladat |
-|---|---|
-| 18:00–18:15 | Specifikáció átolvasása, követelmény-checklist, entitások felírása papírra/jegyzetbe. |
-| 18:15–18:30 | Repo előkészítés: `git init`, GitHub repo létrehozás, push. `docker-compose up -d`, `mvn spring-boot:run`, `npm install && npm run dev` — minden fut-e. |
-| 18:30–19:30 | **Backend**: a kiírás szerinti entitások hozzáadása (másold a `Course` mintát: model → repo → controller → seeder). Role-based `@PreAuthorize`-ok. |
-| 19:30–20:30 | **Frontend**: új oldalak (másold a `Courses.tsx` mintát). Reszponzív CSS gyors ellenőrzés (mobil viewport). |
-| 20:30–20:45 | Üzleti logika finomítás, validáció, edge cases. |
-| 20:45–20:55 | **README frissítés** (telepítés, futtatás, default user-ek, screenshot ha lehet). **`/nyilatkozat` futtatás**, output beillesztése a BME-s DOCX sablonba. |
-| 20:55–21:00 | Final commit, push, beadás. |
+- **Backend (monolit)**: Spring Boot 3.x + Postgres + JWT. Új modulokat **Spring Modulith** package-struktúrával + **hexagonal (ports & adapters)** stílusban írunk. A meglévő `Course` minta marad amíg refaktorra nincs idő.
+- **Chatbot service**: külön Python + FastAPI service (`chatbot/`), kommunikál a monolittal a user JWT-jével.
+- **Web frontend**: React + Vite + TS + Tailwind + shadcn/ui + TanStack Query + Zod (`frontend/`). Feature-folder struktúra.
+- **Mobil**: két szinten — meglévő PWA + új külön React Native (Expo) app (`mobile/`) push/kamera/location-nel az extra pontért.
+- **Adatbázis**: PostgreSQL, modulonként saját schema (logikai izoláció).
 
-## Aranyszabályok versenyhez
-1. **Másold, ne újraírj.** A `Course` entity teljes flow-ja minta — új entitást a fájlnevek átírásával hozz létre 5 perc alatt.
-2. **Először minden mai munka commitold a `verseny-start` branchre.** A versenyen lépésenként commitolj — látszik a fejlődés.
-3. **Demo-felhasználók a Login oldalon prefilled.** Az értékelő 1 kattintással be tud lépni — UX pont.
-4. **Mobil teszt**: Chrome DevTools → device toolbar (Ctrl+Shift+M) → iPhone 12. Ha jól néz ki, kész.
-5. **Minden AI promptot logolj** `nyilatkozat/log-prompt.ps1`-gyel — különben a végén nem tudod kitölteni a nyilatkozatot.
+## Stack táblázat (értékelői dokumentálás)
 
-## Eszközhasználati logolás — minta
+| Réteg | Választás |
+|------|-----------|
+| Adatbázis | PostgreSQL 15 (+ pgvector chatbot RAG-hez) |
+| Backend monolit | Spring Boot 3.2 (Java 17/21) |
+| Modul határok | Spring Modulith + ArchUnit |
+| Chatbot service | Python 3.12 + FastAPI + Anthropic SDK |
+| Web frontend | React 18 + TypeScript + Vite + Tailwind + shadcn/ui |
+| Mobil (alap) | PWA (vite-plugin-pwa) |
+| Mobil (extra) | React Native + Expo (push, camera, location) |
+| Auth | JWT (jjwt 0.12, RS256) |
+| ORM | Spring Data JPA + Hibernate |
+| Observability | Spring Actuator + Micrometer + Prometheus + Grafana + Loki |
 
-Minden alkalommal, amikor új kódot generálsz Claude/Copilot/ChatGPT-vel:
+## Gyors indítás (dev)
 
+### 1) Postgres
 ```powershell
-.\nyilatkozat\log-prompt.ps1 `
-  -Category "Programkód generálása" `
-  -Tool "Claude Code (Opus 4.7)" `
-  -Prompt "Add a Grade entity with student/course/grade fields and CRUD endpoints" `
-  -Files "backend/.../Grade.java, backend/.../GradeController.java" `
-  -Notes "kb 80 sor"
+docker-compose up -d
 ```
 
-## A verseny közben — önértékelés bármikor
-
+### 2) Backend
+```powershell
+cd backend
+mvn spring-boot:run
 ```
-/ertekel
+http://localhost:8081 — `DataSeeder` létrehoz 3 teszt-felhasználót.
+
+> Backend 8081-en, mert Windows-on a System (PID 4) gyakran foglalja a 8080-at. Frontend Vite proxy a 8081-re mutat.
+
+### 3) Frontend
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+http://localhost:5173 — Telefonon Chrome → "Add to Home screen" PWA telepítés.
+
+### Default seed-elt user-ek (jelszó mindenkinek: `password`)
+- `admin@portal.hu` (ADMIN)
+- `oktato@portal.hu` (OKTATO)
+- `hallgato@portal.hu` (HALLGATO)
+
+## Konvenciók
+
+### Új modulok (academic, grading, scheduling, stb.)
+Spring Modulith package alatt, hexagonal layeringgel:
+```
+<modul>/
+├── api/                  ← más modulok ezt látják
+├── domain/               ← tiszta üzleti logika, framework-mentes
+├── application/          ← use case-ek
+└── infrastructure/       ← web, persistence adapters
+```
+A domain layer **semmilyen Spring/JPA-t nem importál**. ArchUnit teszt enforce-olja.
+
+### Meglévő `Course` minta
+Marad a repóban referenciaként. Ha gyors prototípus kell, a Course-ot lehet másolni. **Új feature-öket viszont a fenti hexagonal stílusban** írunk.
+
+### Frontend feature-folder
+```
+src/features/<feature>/
+├── api/                  ← TanStack Query hooks
+├── components/
+├── pages/
+└── types.ts              ← Zod schemas
 ```
 
-Lefutott szempontonkénti pontozás (100p) + **Top 5 legjobb ROI-jú lépés** sorrendben.
-Futtasd 30-45 percenként, hogy lásd hol állsz és mire koncentrálj. Output:
-`nyilatkozat/output/ertekel-YYYY-MM-DD-HHMM.md`.
+### Conventional Commits
+`feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:` prefixek.
 
-## A verseny végén — 1 parancsos nyilatkozat
+### Code style
+- Backend: Spotless + Checkstyle (CI-ban auto-format)
+- Frontend: ESLint + Prettier (pre-commit hook)
+- Strict TypeScript
 
-Claude Code-ban:
+## Mi van már a repóban
 
-```
-/nyilatkozat
-```
+- JWT login/register, role-based endpoint védelem (`@PreAuthorize`)
+- `Course` entity teljes CRUD flow példaként
+- React: AuthContext, ProtectedRoute, axios interceptor JWT-vel
+- PWA manifest + service worker
+- CORS bekonfigurálva localhost:5173-ra
+- Docker-compose Postgres
+- Deploy konfig: Supabase (DB) + Render (BE) + Vercel (FE) — lásd [DEPLOY.md](DEPLOY.md)
 
-Ez kitölti a hivatalos BME sablont a `prompts.jsonl` és a projekt állapot alapján → `nyilatkozat/output/nyilatkozat-2026-05-11.md`.
+## Hol találod a teljes tervet
 
-## Beadáshoz checklist
-- [ ] GitHub repo public, README-vel
-- [ ] `docker-compose up -d && cd backend && mvn spring-boot:run` egyszerűen indítható
-- [ ] Frontend `npm install && npm run dev` egyszerűen indítható
-- [ ] 3 különböző role-lal be lehet lépni, mindegyik másképp viselkedik (auth)
-- [ ] Mobilon (PWA / responsive) értelmesen megjelenik
-- [ ] AI-nyilatkozat kitöltve, beadva a hivatalos DOCX-ben
+- **[TERV.md](TERV.md)** — komplett architektúra, adatmodell, modulok, biztonság, tesztelés, dokumentáció, párhuzamos agent végrehajtási terv
+- **[README.md](README.md)** — futtatási útmutató + tech-stack
+- **[DEPLOY.md](DEPLOY.md)** — production deploy lépések
+
+## Slash command-ok (saját)
+
+- `/ertekel` — önértékelés a TERV.md szempontjai szerint. Output: `nyilatkozat/output/ertekel-YYYY-MM-DD-HHMM.md`
+
+(Az `/nyilatkozat` és AI-prompt-logolás **nem kell** ehhez a verzióhoz — a feladat nem követeli meg.)
