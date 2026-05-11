@@ -1,0 +1,170 @@
+{
+  "app": {
+    "name": "Education Portal",
+    "shortName": "Portal"
+  },
+  "auth": {
+    "login": "Sign in",
+    "logout": "Sign out",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full name",
+    "role": "Role",
+    "submit": "Sign in",
+    "submitRegister": "Register",
+    "loggingIn": "Signing in...",
+    "registering": "Registering...",
+    "loginError": "Invalid email or password.",
+    "registerError": "Registration failed (email already used?).",
+    "testHint": "Test: admin@portal.hu / oktato@portal.hu / hallgato@portal.hu — password: password"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "grades": "Grades",
+    "subjects": "Subjects",
+    "classes": "Classes",
+    "users": "Users",
+    "assignments": "Assignments",
+    "schedule": "Schedule",
+    "attendance": "Attendance",
+    "messages": "Messages",
+    "events": "Events",
+    "homework": "Homework",
+    "groups": "Groups",
+    "surveys": "Surveys",
+    "chat": "Chat",
+    "settings": "Settings",
+    "legacyCourses": "Courses (legacy)"
+  },
+  "roles": {
+    "HALLGATO": "Student",
+    "OKTATO": "Teacher",
+    "ADMIN": "Admin",
+    "SUPERADMIN": "Superadmin"
+  },
+  "common": {
+    "loading": "Loading...",
+    "noData": "No data.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "actions": "Actions",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "back": "Back",
+    "comingSoon": "Coming soon",
+    "stub": "This feature will be ready alongside the parallel backend modules.",
+    "saved": "Saved",
+    "deleted": "Deleted",
+    "created": "Created",
+    "deleteConfirm": "Delete this item?",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "highContrast": "High contrast",
+    "system": "System",
+    "toggle": "Toggle theme"
+  },
+  "language": {
+    "hu": "Magyar",
+    "en": "English",
+    "toggle": "Toggle language"
+  },
+  "grades": {
+    "myGrades": "My grades",
+    "subject": "Subject",
+    "value": "Value",
+    "type": "Type",
+    "weight": "Weight",
+    "comment": "Comment",
+    "recordedAt": "Recorded",
+    "recordedBy": "By",
+    "average": "Average",
+    "weightedAverage": "Weighted average",
+    "noGrades": "No grades yet.",
+    "addGrade": "Record grade",
+    "editGrade": "Edit grade",
+    "deleteConfirm": "Delete this grade?",
+    "types": {
+      "NORMAL": "Normal",
+      "MIDTERM": "Midterm",
+      "HALFYEAR": "Half-year",
+      "YEAR_END": "Year-end"
+    },
+    "saved": "Grade saved",
+    "deleted": "Grade deleted",
+    "errors": {
+      "value": "Value must be between 1 and 5",
+      "weight": "Weight must be positive"
+    }
+  },
+  "subjects": {
+    "list": "Subjects",
+    "name": "Name",
+    "description": "Description",
+    "requiredBook": "Required book",
+    "lessonsJson": "Lessons (JSON)",
+    "createdAt": "Created",
+    "create": "New subject",
+    "edit": "Edit subject"
+  },
+  "classes": {
+    "list": "Classes",
+    "startYear": "Start year",
+    "identifier": "Identifier",
+    "displayName": "Display name",
+    "createdAt": "Created",
+    "create": "New class",
+    "edit": "Edit class"
+  },
+  "assignments": {
+    "list": "Subject assignments",
+    "year": "Year",
+    "schoolClass": "Class",
+    "subject": "Subject",
+    "teacher": "Teacher",
+    "create": "New assignment",
+    "delete": "Delete assignment",
+    "filters": {
+      "year": "Year filter",
+      "classId": "Class ID",
+      "teacherId": "Teacher ID"
+    }
+  },
+  "users": {
+    "list": "Students",
+    "registerUser": "Register new user",
+    "userId": "User ID",
+    "schoolClass": "Class",
+    "enrolledAt": "Enrolled",
+    "createStudent": "Enroll student into class",
+    "noStudent": "No student profile — newly registered HALLGATO accounts must be enrolled in a class."
+  },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}!",
+    "student": {
+      "recentGrades": "Recent grades",
+      "todaySchedule": "Today's schedule",
+      "upcomingEvents": "Upcoming events",
+      "unreadMessages": "Unread messages"
+    },
+    "teacher": {
+      "myTeaching": "My subjects",
+      "todayLessons": "Today's lessons",
+      "pendingHomework": "Homework to grade"
+    },
+    "admin": {
+      "userCount": "Users",
+      "classCount": "Classes",
+      "subjectCount": "Subjects"
+    }
+  }
+}

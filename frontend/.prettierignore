@@ -1,0 +1,8 @@
+node_modules
+dist
+dist-ssr
+.vite
+tsconfig.tsbuildinfo
+package-lock.json
+src/shared/components/ui/**
+public

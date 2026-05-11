@@ -49,6 +49,48 @@ Frontend: http://localhost:5173. Telefonon Chrome → "Add to Home screen" → t
 - Docker-compose Postgres
 - AI-nyilatkozat generálás: `.claude/commands/nyilatkozat.md` → ld. [nyilatkozat/README.md](nyilatkozat/README.md)
 
+## Frontend (B brief — `feat/frontend-redesign`)
+
+A frontend feature-folder szerkezetbe lett átszervezve:
+
+```
+frontend/src/
+├── auth/                  AuthContext, ProtectedRoute, RoleGuard, login/register oldalak
+├── shared/
+│   ├── api/               axios client + TanStack Query QueryClient
+│   ├── components/        AppLayout, ThemeToggle, LanguageSwitcher, ui/ (shadcn)
+│   ├── hooks/             useTheme (light/dark/high-contrast/system)
+│   ├── lib/               cn helper, JWT decode
+│   └── types/             API entitás típusok (Role, AppUser, Grade, ...)
+├── features/
+│   ├── dashboard/         role-szerinti DashboardRouter (HALLGATO/OKTATO/ADMIN/SUPERADMIN)
+│   ├── grades/            Zod schema + TanStack hooks + MyGrades / RecordGrade / ClassAverages
+│   ├── subjects/, classes/, users/, assignments/, schedule/, messaging/,
+│   │   events/, homework/, groups/, surveys/  — stubok (Foundation merge után élesítve)
+│   ├── chat/              localStorage mock chatbot UI (Window C service-éhez köthető)
+│   └── settings/          téma + nyelv kapcsolók
+├── legacy/                régi Dashboard.tsx + Courses.tsx megőrizve referenciaként
+├── i18n/                  HU + EN fordítások (`react-i18next` + browser detector)
+└── styles/globals.css     Tailwind directives + shadcn CSS változók (3 téma)
+```
+
+Tech-stack:
+- **shadcn/ui** (Radix primitives + Tailwind) komponensekkel
+- **TanStack Query** server state-re, axios interceptorral 401-en logout
+- **Zod + react-hook-form** runtime validációval, accessibilis form hibákkal
+- **react-i18next** HU/EN nyelvi switch, `localStorage` cache
+- **`useTheme`**: `'light' | 'dark' | 'high-contrast' | 'system'`, `data-theme` attribútumon keresztül
+- **`@/`** alias → `src/` (`tsconfig.json` + `vite.config.ts`)
+- **Sonner** toast a feedback-hez
+
+Futtatás:
+```powershell
+cd frontend
+npm install
+npm run dev      # → http://localhost:5173
+npm run build    # tsc + vite build
+```
+
 ## Versenynapi runbook
 Ld. [CLAUDE.md](CLAUDE.md).
 
