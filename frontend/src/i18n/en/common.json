@@ -139,6 +139,16 @@
       "teacherId": "Teacher ID"
     }
   },
+  "events": {
+    "title": "Title",
+    "description": "Description",
+    "startAt": "Starts",
+    "endAt": "Ends",
+    "location": "Location",
+    "create": "New event",
+    "deleteTitle": "Delete event",
+    "deleteDescription": "Delete event \"{{title}}\"? This cannot be undone."
+  },
   "users": {
     "list": "Students",
     "registerUser": "Register new user",

@@ -2,6 +2,7 @@ package com.verseny.portal;
 
 import com.verseny.portal.model.AppUser;
 import com.verseny.portal.model.Course;
+import com.verseny.portal.model.Event;
 import com.verseny.portal.model.Grade;
 import com.verseny.portal.model.GradeType;
 import com.verseny.portal.model.Role;
@@ -10,6 +11,7 @@ import com.verseny.portal.model.Student;
 import com.verseny.portal.model.Subject;
 import com.verseny.portal.model.SubjectAssignment;
 import com.verseny.portal.repository.CourseRepository;
+import com.verseny.portal.repository.EventRepository;
 import com.verseny.portal.repository.GradeRepository;
 import com.verseny.portal.repository.SchoolClassRepository;
 import com.verseny.portal.repository.StudentRepository;
@@ -25,6 +27,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -43,6 +46,7 @@ public class DataSeeder {
                                   SubjectRepository subjects,
                                   SubjectAssignmentRepository assignments,
                                   GradeRepository grades,
+                                  EventRepository events,
                                   JdbcTemplate jdbc,
                                   PasswordEncoder enc) {
         return args -> {
@@ -139,8 +143,17 @@ public class DataSeeder {
                 }
             }
 
-            log.info("DataSeeder finished. Users={}, classes={}, students={}, subjects={}, assignments={}, grades={}",
-                    users.count(), classes.count(), students.count(), subjects.count(), assignments.count(), grades.count());
+            // --- Events ---
+            ensureEvent(events, admin, "Tanévzáró", "Az iskolaév hivatalos lezárása.",
+                    LocalDateTime.of(2026, 6, 15, 10, 0), null, "Iskolai aula");
+            ensureEvent(events, admin, "Szülői értekezlet",
+                    "Aktuális tájékoztató minden osztály szülei számára.",
+                    LocalDateTime.of(2026, 5, 20, 18, 0), null, "Osztálytermek");
+            ensureEvent(events, admin, "Sportnap", "Játékos vetélkedő és csapatsportok.",
+                    LocalDateTime.of(2026, 5, 25, 9, 0), null, "Sportpálya");
+
+            log.info("DataSeeder finished. Users={}, classes={}, students={}, subjects={}, assignments={}, grades={}, events={}",
+                    users.count(), classes.count(), students.count(), subjects.count(), assignments.count(), grades.count(), events.count());
             // referenced to avoid IDE warnings; the variables capture the seeded admins
             log.debug("Seeded admins: {} / {}", admin.getEmail(), superadmin.getEmail());
         };
@@ -204,6 +217,21 @@ public class DataSeeder {
                         .subject(subject)
                         .teacher(teacher)
                         .year(year)
+                        .build()));
+    }
+
+    private Event ensureEvent(EventRepository events, AppUser createdBy, String title, String description,
+                              LocalDateTime startAt, LocalDateTime endAt, String location) {
+        return events.findAllByOrderByStartAtAsc().stream()
+                .filter(e -> title.equals(e.getTitle()) && startAt.equals(e.getStartAt()))
+                .findFirst()
+                .orElseGet(() -> events.save(Event.builder()
+                        .title(title)
+                        .description(description)
+                        .startAt(startAt)
+                        .endAt(endAt)
+                        .location(location)
+                        .createdBy(createdBy)
                         .build()));
     }
 }
