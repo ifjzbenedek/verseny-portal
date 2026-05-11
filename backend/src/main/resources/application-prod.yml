@@ -1,0 +1,27 @@
+server:
+  port: ${PORT:8081}
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        # Session-pooler on Supabase doesn't support server-side prepared statements;
+        # disable Hibernate's statement caching to stay compatible.
+        jdbc.lob.non_contextual_creation: true
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+  cors:
+    origins: ${CORS_ORIGINS:https://localhost:5173}

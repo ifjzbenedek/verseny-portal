@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/portal
+    username: portal
+    password: portal
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  jwt:
+    secret: change-me-in-prod-this-must-be-at-least-32-bytes-long-secret-key-xx
+    expiration-ms: 86400000
+  cors:
+    origins: http://localhost:5173,http://localhost:4173
