@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import path from 'node:path';
 
 export default defineConfig({
   plugins: [
@@ -12,7 +13,7 @@ export default defineConfig({
         name: 'Oktatásszervezési Portál',
         short_name: 'Portál',
         description: 'BME VIK Fullstack Verseny',
-        theme_color: '#1f2937',
+        theme_color: '#0f172a',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/',
@@ -24,6 +25,11 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   server: {
     port: 5173,
     proxy: {

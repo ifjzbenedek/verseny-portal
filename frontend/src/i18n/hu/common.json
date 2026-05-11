@@ -1,0 +1,122 @@
+{
+  "app": {
+    "name": "Oktatásszervezési Portál",
+    "shortName": "Portál"
+  },
+  "auth": {
+    "login": "Bejelentkezés",
+    "logout": "Kilépés",
+    "register": "Regisztráció",
+    "email": "Email",
+    "password": "Jelszó",
+    "fullName": "Teljes név",
+    "role": "Szerepkör",
+    "submit": "Belépés",
+    "submitRegister": "Regisztráció",
+    "loggingIn": "Bejelentkezés folyamatban...",
+    "registering": "Regisztráció folyamatban...",
+    "loginError": "Hibás email vagy jelszó.",
+    "registerError": "Sikertelen regisztráció (létező email?).",
+    "testHint": "Teszt: admin@portal.hu / oktato@portal.hu / hallgato@portal.hu — jelszó: password"
+  },
+  "nav": {
+    "dashboard": "Áttekintés",
+    "grades": "Jegyek",
+    "subjects": "Tárgyak",
+    "classes": "Osztályok",
+    "users": "Felhasználók",
+    "assignments": "Tárgyhozzárendelések",
+    "schedule": "Órarend",
+    "attendance": "Jelenlét",
+    "messages": "Üzenetek",
+    "events": "Események",
+    "homework": "Beadandók",
+    "groups": "Csoportok",
+    "surveys": "Kérdőívek",
+    "chat": "Chat",
+    "settings": "Beállítások",
+    "legacyCourses": "Kurzusok (legacy)"
+  },
+  "roles": {
+    "HALLGATO": "Hallgató",
+    "OKTATO": "Oktató",
+    "ADMIN": "Admin",
+    "SUPERADMIN": "Superadmin"
+  },
+  "common": {
+    "loading": "Töltés...",
+    "noData": "Nincs adat.",
+    "save": "Mentés",
+    "cancel": "Mégse",
+    "delete": "Törlés",
+    "edit": "Szerkesztés",
+    "create": "Létrehozás",
+    "search": "Keresés",
+    "actions": "Műveletek",
+    "confirm": "Megerősítés",
+    "yes": "Igen",
+    "no": "Nem",
+    "back": "Vissza",
+    "comingSoon": "Hamarosan",
+    "stub": "Ez a funkció a párhuzamos backend modulokkal együtt készül el."
+  },
+  "theme": {
+    "light": "Világos",
+    "dark": "Sötét",
+    "highContrast": "Magas kontraszt",
+    "system": "Rendszer",
+    "toggle": "Téma váltása"
+  },
+  "language": {
+    "hu": "Magyar",
+    "en": "English",
+    "toggle": "Nyelv váltása"
+  },
+  "grades": {
+    "myGrades": "Saját jegyek",
+    "subject": "Tárgy",
+    "value": "Érték",
+    "type": "Típus",
+    "weight": "Súly",
+    "comment": "Megjegyzés",
+    "recordedAt": "Beírva",
+    "recordedBy": "Beírta",
+    "average": "Átlag",
+    "weightedAverage": "Súlyozott átlag",
+    "noGrades": "Még nincs beírt jegy.",
+    "addGrade": "Új jegy beírása",
+    "editGrade": "Jegy szerkesztése",
+    "deleteConfirm": "Biztosan törlöd a jegyet?",
+    "types": {
+      "NORMAL": "Normál",
+      "MIDTERM": "Évközi vizsga",
+      "HALFYEAR": "Félévi",
+      "YEAR_END": "Év végi"
+    },
+    "saved": "Jegy elmentve",
+    "deleted": "Jegy törölve",
+    "errors": {
+      "value": "Az érték 1 és 5 között legyen",
+      "weight": "A súlynak pozitívnak kell lennie"
+    }
+  },
+  "dashboard": {
+    "welcome": "Üdv, {{name}}!",
+    "student": {
+      "recentGrades": "Legutóbbi jegyek",
+      "todaySchedule": "Mai órarend",
+      "upcomingEvents": "Közelgő események",
+      "unreadMessages": "Olvasatlan üzenetek"
+    },
+    "teacher": {
+      "myTeaching": "Tanított tárgyak",
+      "todayLessons": "Mai óráim",
+      "pendingHomework": "Javítandó beadandók"
+    },
+    "admin": {
+      "userCount": "Felhasználók száma",
+      "classCount": "Osztályok száma",
+      "subjectCount": "Tárgyak száma"
+    }
+  }
+}
