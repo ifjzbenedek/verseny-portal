@@ -94,6 +94,20 @@ npm run build    # tsc + vite build
 ## Versenynapi runbook
 Ld. [CLAUDE.md](CLAUDE.md).
 
+## Mobilitás
+
+A webalkalmazás reszponzív, mobil eszközön is megfelelően megjelenik (Tailwind + shadcn/ui mobile-first defaultokkal). PWA-ként telepíthető Chrome / Safari "Add to Home Screen" menüből — saját ikon, splash screen, offline cache a service workerből.
+
+### Mobil-specifikus funkciók
+
+- **Geolocation API** az Események oldalon: a felhasználó "Helyzetem" gombbal megosztja a pozícióját, és minden eseménykártyán megjelenik a távolság (Haversine képlettel). A seed-elt események BME-koordinátákat kaptak.
+- **PWA service worker** (`vite-plugin-pwa` autoUpdate): offline cache + installálható manifest 192/512 px ikonokkal.
+- **Apple touch icon** iOS PWA-hoz (180×180).
+
+### Tervezett, kihagyott
+
+Külön natív / cross-platform mobil alkalmazás (React Native + Expo) tervben volt (lásd [TASKS/D-mobile-expo.md](TASKS/D-mobile-expo.md)), de a PWA-megoldás funkcionálisan ugyanazt adja a böngészős Web API-kon át (Geolocation, MediaDevices, Notifications).
+
 ## Deploy
 Supabase Postgres + Render (backend) + Vercel (frontend): [DEPLOY.md](DEPLOY.md).
 
@@ -103,7 +117,7 @@ Supabase Postgres + Render (backend) + Vercel (frontend): [DEPLOY.md](DEPLOY.md)
 | Adatbázis | PostgreSQL 15 |
 | Backend | Spring Boot 3.2 (Java 17) |
 | Frontend | React 18 + TypeScript + Vite |
-| Mobil | PWA (vite-plugin-pwa, manifest + service worker) |
+| Mobil | PWA (vite-plugin-pwa, manifest + service worker), Geolocation API |
 | Auth | JWT (jjwt 0.12) |
 | ORM | Spring Data JPA + Hibernate |
 

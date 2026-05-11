@@ -16,6 +16,8 @@ public class EventDtos {
             LocalDateTime startAt,
             LocalDateTime endAt,
             String location,
+            Double latitude,
+            Double longitude,
             String createdByFullName,
             LocalDateTime createdAt
     ) {
@@ -27,6 +29,8 @@ public class EventDtos {
                     e.getStartAt(),
                     e.getEndAt(),
                     e.getLocation(),
+                    e.getLatitude(),
+                    e.getLongitude(),
                     e.getCreatedBy() == null ? null : e.getCreatedBy().getFullName(),
                     e.getCreatedAt()
             );
@@ -38,6 +42,8 @@ public class EventDtos {
             @Size(max = 2000) String description,
             @NotNull LocalDateTime startAt,
             LocalDateTime endAt,
-            @Size(max = 255) String location
+            @Size(max = 255) String location,
+            Double latitude,
+            Double longitude
     ) {}
 }

@@ -44,6 +44,8 @@ public class EventController {
                 .startAt(req.startAt())
                 .endAt(req.endAt())
                 .location(req.location())
+                .latitude(req.latitude())
+                .longitude(req.longitude())
                 .createdBy(currentUser.require())
                 .build());
         return ResponseEntity.status(201).body(EventResponse.from(saved));

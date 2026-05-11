@@ -25,6 +25,14 @@ export function useCreateEvent() {
         startAt: input.startAt,
         endAt: input.endAt || null,
         location: input.location || null,
+        latitude:
+          input.latitude === undefined || input.latitude === ''
+            ? null
+            : Number(input.latitude),
+        longitude:
+          input.longitude === undefined || input.longitude === ''
+            ? null
+            : Number(input.longitude),
       };
       const { data } = await api.post<EventResponse>('/events', payload);
       return data;
