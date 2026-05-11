@@ -1,15 +1,13 @@
 package com.verseny.portal.controller;
 
-import com.verseny.portal.dto.AuthDtos.*;
-import com.verseny.portal.model.AppUser;
-import com.verseny.portal.model.Role;
-import com.verseny.portal.repository.UserRepository;
-import com.verseny.portal.security.JwtUtil;
+import com.verseny.portal.dto.AuthDtos.AuthResponse;
+import com.verseny.portal.dto.AuthDtos.LoginRequest;
+import com.verseny.portal.dto.AuthDtos.RegisterRequest;
+import com.verseny.portal.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,42 +15,21 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Auth", description = "Regisztráció és bejelentkezés")
 public class AuthController {
 
-    private final UserRepository users;
-    private final PasswordEncoder encoder;
-    private final JwtUtil jwt;
+    private final AuthService authService;
 
-    public AuthController(UserRepository users, PasswordEncoder encoder, JwtUtil jwt) {
-        this.users = users;
-        this.encoder = encoder;
-        this.jwt = jwt;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/register")
     @Operation(summary = "Új felhasználó regisztrálása")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
-        if (users.existsByEmail(req.email())) {
-            return ResponseEntity.badRequest().body("Email already in use");
-        }
-        Role role = req.role() != null ? req.role() : Role.HALLGATO;
-        AppUser u = AppUser.builder()
-                .email(req.email())
-                .passwordHash(encoder.encode(req.password()))
-                .fullName(req.fullName())
-                .role(role)
-                .build();
-        users.save(u);
-        String token = jwt.generate(u.getEmail(), u.getRole().name());
-        return ResponseEntity.ok(new AuthResponse(token, u.getEmail(), u.getFullName(), u.getRole()));
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest req) {
+        return ResponseEntity.ok(authService.register(req));
     }
 
     @PostMapping("/login")
     @Operation(summary = "Bejelentkezés JWT tokenért")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req) {
-        return users.findByEmail(req.email())
-                .filter(u -> encoder.matches(req.password(), u.getPasswordHash()))
-                .<ResponseEntity<?>>map(u -> ResponseEntity.ok(new AuthResponse(
-                        jwt.generate(u.getEmail(), u.getRole().name()),
-                        u.getEmail(), u.getFullName(), u.getRole())))
-                .orElseGet(() -> ResponseEntity.status(401).body("Invalid credentials"));
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest req) {
+        return ResponseEntity.ok(authService.login(req));
     }
 }
