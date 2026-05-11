@@ -1,13 +1,5 @@
 import { api } from '@/shared/api/client';
-import type { Role } from '@/shared/types/api';
-
-export interface AuthResponse {
-  token: string;
-  email: string;
-  fullName: string;
-  role: Role;
-  id?: number;
-}
+import type { AuthResponse, Role } from '@/shared/types/api';
 
 export interface LoginInput {
   email: string;

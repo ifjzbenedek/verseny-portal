@@ -8,14 +8,15 @@ import ClassAveragesPage from './ClassAveragesPage';
 
 export default function GradesRoutes() {
   const { user } = useAuth();
-  const defaultPath = user?.role === 'HALLGATO' ? 'me' : 'record';
+  const defaultPath =
+    user?.role === 'HALLGATO' ? 'me' : user?.role === 'OKTATO' ? 'record' : 'averages';
   return (
     <Routes>
       <Route index element={<Navigate to={defaultPath} replace />} />
       <Route
         path="me"
         element={
-          <RoleGuard allow={['HALLGATO', 'OKTATO', 'ADMIN', 'SUPERADMIN']}>
+          <RoleGuard allow={['HALLGATO']}>
             <MyGradesPage />
           </RoleGuard>
         }
@@ -23,7 +24,7 @@ export default function GradesRoutes() {
       <Route
         path="record"
         element={
-          <RoleGuard allow={['OKTATO', 'ADMIN', 'SUPERADMIN']}>
+          <RoleGuard allow={['OKTATO']}>
             <RecordGradePage />
           </RoleGuard>
         }

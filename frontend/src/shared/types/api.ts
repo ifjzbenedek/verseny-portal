@@ -7,51 +7,83 @@ export interface AppUser {
   role: Role;
 }
 
-export interface SchoolClass {
+export interface AuthResponse {
+  token: string;
+  email: string;
+  fullName: string;
+  role: Role;
+}
+
+export interface SchoolClassResponse {
   id: number;
   startYear: number;
   identifier: string;
-  createdAt?: string;
+  displayName: string;
+  createdAt: string;
 }
 
-export interface Subject {
+export interface SubjectResponse {
   id: number;
   name: string;
-  description?: string;
-  requiredBook?: string;
-  lessonsJson?: string;
-  createdAt?: string;
+  description: string | null;
+  requiredBook: string | null;
+  lessonsJson: string | null;
+  createdAt: string;
 }
 
-export interface Student {
+export interface StudentResponse {
   id: number;
-  user: AppUser;
-  schoolClass: SchoolClass;
-  enrolledAt?: string;
+  userId: number;
+  email: string;
+  fullName: string;
+  schoolClassId: number;
+  schoolClassName: string;
+  enrolledAt: string;
 }
 
-export interface SubjectAssignment {
+export interface SubjectAssignmentResponse {
   id: number;
-  schoolClass: SchoolClass;
-  subject: Subject;
-  teacher: AppUser;
+  schoolClassId: number;
+  schoolClassName: string;
+  subjectId: number;
+  subjectName: string;
+  teacherId: number;
+  teacherName: string;
   year: number;
 }
 
 export type GradeType = 'NORMAL' | 'MIDTERM' | 'HALFYEAR' | 'YEAR_END';
 
-export interface Grade {
+export interface GradeResponse {
   id: number;
   studentId: number;
+  studentName: string | null;
   assignmentId: number;
-  subjectName?: string;
-  teacherName?: string;
+  subjectName: string | null;
+  schoolClassName: string | null;
   value: number;
   type: GradeType;
   weight: number;
-  comment?: string;
+  comment: string | null;
   recordedAt: string;
-  recordedByName?: string;
+  recordedById: number | null;
+  recordedByName: string | null;
+}
+
+export interface SubjectAverageEntry {
+  studentId: number;
+  studentName: string | null;
+  weightedAverage: number;
+  gradeCount: number;
+}
+
+export interface ClassSubjectAverageResponse {
+  schoolClassId: number;
+  schoolClassName: string;
+  subjectId: number;
+  subjectName: string;
+  classWeightedAverage: number | null;
+  perStudent: SubjectAverageEntry[];
 }
 
 export interface ProblemDetails {
@@ -63,7 +95,7 @@ export interface ProblemDetails {
   traceId?: string;
 }
 
-export interface Page<T> {
+export interface SpringPage<T> {
   content: T[];
   totalElements: number;
   totalPages: number;

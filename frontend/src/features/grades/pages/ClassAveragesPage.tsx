@@ -52,12 +52,22 @@ export default function ClassAveragesPage() {
         <EmptyState title={t('common.noData')} description="Adj meg osztály és tárgy ID-t." />
       ) : isLoading ? (
         <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
-      ) : !data || data.students.length === 0 ? (
+      ) : !data || data.perStudent.length === 0 ? (
         <EmptyState title={t('common.noData')} />
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>{t('grades.weightedAverage')}</CardTitle>
+            <CardTitle className="flex flex-wrap items-baseline justify-between gap-2">
+              <span>
+                {data.schoolClassName} — {data.subjectName}
+              </span>
+              <span className="text-base font-normal text-muted-foreground">
+                {t('grades.weightedAverage')}:{' '}
+                <span className="font-semibold text-foreground">
+                  {data.classWeightedAverage?.toFixed(2) ?? '—'}
+                </span>
+              </span>
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -69,11 +79,11 @@ export default function ClassAveragesPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.students.map((s) => (
+                {data.perStudent.map((s) => (
                   <TableRow key={s.studentId}>
-                    <TableCell>{s.studentName}</TableCell>
-                    <TableCell className="font-medium">{s.average.toFixed(2)}</TableCell>
-                    <TableCell className="text-muted-foreground">{s.count}</TableCell>
+                    <TableCell>{s.studentName ?? '—'}</TableCell>
+                    <TableCell className="font-medium">{s.weightedAverage.toFixed(2)}</TableCell>
+                    <TableCell className="text-muted-foreground">{s.gradeCount}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

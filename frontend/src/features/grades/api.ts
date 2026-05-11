@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { api } from '@/shared/api/client';
-import type { GradeFormValues, GradeResponse } from './schemas';
+import type { ClassSubjectAverageResponse } from '@/shared/types/api';
+import type { GradeCreateInput, GradeResponse, GradeUpdateInput } from './schemas';
 
 const KEYS = {
   me: ['grades', 'me'] as const,
@@ -39,9 +40,9 @@ export function useClassAverage(classId: number | null, subjectId: number | null
     queryKey:
       classId && subjectId ? KEYS.classAverage(classId, subjectId) : ['grades', 'avg', 'none'],
     queryFn: async () => {
-      const { data } = await api.get<{
-        students: Array<{ studentId: number; studentName: string; average: number; count: number }>;
-      }>(`/grades/class/${classId}/subject/${subjectId}/average`);
+      const { data } = await api.get<ClassSubjectAverageResponse>(
+        `/grades/class/${classId}/subject/${subjectId}/average`,
+      );
       return data;
     },
   });
@@ -50,7 +51,7 @@ export function useClassAverage(classId: number | null, subjectId: number | null
 export function useCreateGrade() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (input: GradeFormValues) => {
+    mutationFn: async (input: GradeCreateInput) => {
       const { data } = await api.post<GradeResponse>('/grades', input);
       return data;
     },
@@ -63,7 +64,7 @@ export function useCreateGrade() {
 export function useUpdateGrade() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...input }: GradeFormValues & { id: number }) => {
+    mutationFn: async ({ id, ...input }: GradeUpdateInput & { id: number }) => {
       const { data } = await api.put<GradeResponse>(`/grades/${id}`, input);
       return data;
     },

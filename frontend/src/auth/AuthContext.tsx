@@ -10,7 +10,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 
 import { decodeJwt } from '@/shared/lib/jwt';
-import type { AppUser, Role } from '@/shared/types/api';
+import type { AppUser, AuthResponse, Role } from '@/shared/types/api';
 import { loginRequest, registerRequest } from './api';
 
 interface AuthState {
@@ -36,6 +36,13 @@ function readStoredUser(): AppUser | null {
   }
 }
 
+// Foundation AuthResponse has no id field; the JWT subject claim is the email.
+// We keep id as 0 here; HALLGATO-specific UI fetches GET /students/me to get the
+// real student id when needed.
+function toUser(data: AuthResponse): AppUser {
+  return { id: 0, email: data.email, fullName: data.fullName, role: data.role };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [user, setUser] = useState<AppUser | null>(() => readStoredUser());
@@ -51,35 +58,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     else localStorage.removeItem(TOKEN_KEY);
   }, [token]);
 
-  const applyLoginResponse = useCallback(
-    (data: { token: string; email: string; fullName: string; role: Role; id?: number }) => {
-      const decoded = decodeJwt(data.token);
-      const idFromClaim = typeof decoded?.sub === 'string' ? Number(decoded.sub) : data.id;
-      setToken(data.token);
-      setUser({
-        id: Number.isFinite(idFromClaim) ? (idFromClaim as number) : 0,
-        email: data.email,
-        fullName: data.fullName,
-        role: data.role,
-      });
-    },
-    [],
-  );
+  // On mount with a stored token, verify it isn't expired; if it is, clear auth.
+  useEffect(() => {
+    if (!token) return;
+    const decoded = decodeJwt(token);
+    if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
+      setUser(null);
+      setToken(null);
+    }
+  }, [token]);
 
-  const login = useCallback(
-    async (email: string, password: string) => {
-      const data = await loginRequest({ email, password });
-      applyLoginResponse(data);
-    },
-    [applyLoginResponse],
-  );
+  const login = useCallback(async (email: string, password: string) => {
+    const data = await loginRequest({ email, password });
+    setToken(data.token);
+    setUser(toUser(data));
+  }, []);
 
   const register = useCallback(
     async (email: string, password: string, fullName: string, role: Role) => {
       const data = await registerRequest({ email, password, fullName, role });
-      applyLoginResponse(data);
+      setToken(data.token);
+      setUser(toUser(data));
     },
-    [applyLoginResponse],
+    [],
   );
 
   const logout = useCallback(() => {

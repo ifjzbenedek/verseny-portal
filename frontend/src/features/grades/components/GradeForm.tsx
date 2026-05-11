@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { gradeFormSchema, type GradeFormValues } from '../schemas';
+import { gradeCreateSchema, type GradeCreateInput } from '../schemas';
 import { useCreateGrade } from '../api';
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
   onSuccess?: () => void;
 }
 
-const TYPES: GradeFormValues['type'][] = ['NORMAL', 'MIDTERM', 'HALFYEAR', 'YEAR_END'];
+const TYPES: GradeCreateInput['type'][] = ['NORMAL', 'MIDTERM', 'HALFYEAR', 'YEAR_END'];
 
 export function GradeForm({ assignmentId, studentId, onSuccess }: Props) {
   const { t } = useTranslation();
@@ -34,8 +34,8 @@ export function GradeForm({ assignmentId, studentId, onSuccess }: Props) {
     setValue,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<GradeFormValues>({
-    resolver: zodResolver(gradeFormSchema),
+  } = useForm<GradeCreateInput>({
+    resolver: zodResolver(gradeCreateSchema),
     defaultValues: {
       value: 5,
       type: 'NORMAL',
@@ -46,7 +46,7 @@ export function GradeForm({ assignmentId, studentId, onSuccess }: Props) {
     },
   });
 
-  const onSubmit = async (values: GradeFormValues) => {
+  const onSubmit = async (values: GradeCreateInput) => {
     try {
       await create.mutateAsync(values);
       toast.success(t('grades.saved'));
@@ -87,7 +87,7 @@ export function GradeForm({ assignmentId, studentId, onSuccess }: Props) {
         <Label htmlFor="type">{t('grades.type')}</Label>
         <Select
           value={currentType}
-          onValueChange={(v) => setValue('type', v as GradeFormValues['type'])}
+          onValueChange={(v) => setValue('type', v as GradeCreateInput['type'])}
         >
           <SelectTrigger id="type">
             <SelectValue />
