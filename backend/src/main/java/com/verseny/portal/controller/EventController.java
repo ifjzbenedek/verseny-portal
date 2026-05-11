@@ -1,10 +1,8 @@
 package com.verseny.portal.controller;
 
-import com.verseny.portal.dto.EventDtos.*;
-import com.verseny.portal.exception.NotFoundException;
-import com.verseny.portal.model.Event;
-import com.verseny.portal.repository.EventRepository;
-import com.verseny.portal.security.CurrentUser;
+import com.verseny.portal.dto.EventDtos.EventCreateRequest;
+import com.verseny.portal.dto.EventDtos.EventResponse;
+import com.verseny.portal.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,44 +17,31 @@ import java.util.List;
 @Tag(name = "Events", description = "Iskolai események kezelése")
 public class EventController {
 
-    private final EventRepository events;
-    private final CurrentUser currentUser;
+    private final EventService eventService;
 
-    public EventController(EventRepository events, CurrentUser currentUser) {
-        this.events = events;
-        this.currentUser = currentUser;
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
     }
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Összes esemény (kezdés szerint növekvő sorrend)")
     public List<EventResponse> list() {
-        return events.findAllByOrderByStartAtAsc().stream().map(EventResponse::from).toList();
+        return eventService.listAll();
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','SUPERADMIN')")
     @Operation(summary = "Új esemény létrehozása")
     public ResponseEntity<EventResponse> create(@Valid @RequestBody EventCreateRequest req) {
-        Event saved = events.save(Event.builder()
-                .title(req.title())
-                .description(req.description())
-                .startAt(req.startAt())
-                .endAt(req.endAt())
-                .location(req.location())
-                .latitude(req.latitude())
-                .longitude(req.longitude())
-                .createdBy(currentUser.require())
-                .build());
-        return ResponseEntity.status(201).body(EventResponse.from(saved));
+        return ResponseEntity.status(201).body(eventService.create(req));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','SUPERADMIN')")
     @Operation(summary = "Esemény törlése")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Event e = events.findById(id).orElseThrow(() -> NotFoundException.of("Event", id));
-        events.delete(e);
+        eventService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
