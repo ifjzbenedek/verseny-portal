@@ -9,78 +9,100 @@ import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/lib/utils';
 
 interface ChatMessage {
-  id: string;
-  role: 'user' | 'bot';
-  text: string;
-  ts: number;
+  role: 'user' | 'assistant';
+  content: string;
 }
 
-const STORAGE_KEY = 'chat.history';
-
-function load(): ChatMessage[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as ChatMessage[]) : [];
-  } catch {
-    return [];
-  }
-}
+const CHATBOT_URL =
+  (import.meta.env.VITE_CHATBOT_URL as string | undefined) ?? 'http://localhost:8000';
 
 export default function ChatPage() {
   const { t } = useTranslation();
-  const [messages, setMessages] = useState<ChatMessage[]>(() => load());
-  const [text, setText] = useState('');
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, loading]);
 
-  const submit = (e: FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    const now = Date.now();
-    const userMsg: ChatMessage = { id: String(now), role: 'user', text: trimmed, ts: now };
-    const botMsg: ChatMessage = {
-      id: String(now + 1),
-      role: 'bot',
-      text: t('common.comingSoon') + ' — ' + t('common.stub'),
-      ts: now + 1,
-    };
-    setMessages((prev) => [...prev, userMsg, botMsg]);
-    setText('');
+    const text = input.trim();
+    if (!text || loading) return;
+    setError(null);
+    const nextHistory: ChatMessage[] = [...messages, { role: 'user', content: text }];
+    setMessages(nextHistory);
+    setInput('');
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${CHATBOT_URL}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token ?? ''}`,
+        },
+        body: JSON.stringify({ message: text, history: messages }),
+      });
+      if (!res.ok) {
+        const body = await res.text();
+        throw new Error(`${res.status}: ${body}`);
+      }
+      const data = (await res.json()) as { reply: string };
+      setMessages([...nextHistory, { role: 'assistant', content: data.reply }]);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      <PageHeader title={t('nav.chat')} description={t('common.stub')} />
+      <PageHeader title={t('nav.chat')} description="Iskolai AI asszisztens" />
       <Card className="flex h-[60vh] flex-col">
         <CardContent className="flex-1 overflow-y-auto p-4">
           <div className="space-y-3">
-            {messages.map((m) => (
+            {messages.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Üdv! Kérdezhetsz pl. a jegyeidről, tárgyaidról vagy tanulási tippekről.
+              </p>
+            )}
+            {messages.map((m, i) => (
               <div
-                key={m.id}
+                key={i}
                 className={cn(
-                  'max-w-[80%] rounded-lg px-3 py-2 text-sm',
-                  m.role === 'user' ? 'ml-auto bg-primary text-primary-foreground' : 'bg-muted',
+                  'max-w-[80%] whitespace-pre-wrap rounded-lg px-3 py-2 text-sm',
+                  m.role === 'user'
+                    ? 'ml-auto bg-primary text-primary-foreground'
+                    : 'bg-muted',
                 )}
               >
-                {m.text}
+                {m.content}
               </div>
             ))}
+            {loading && (
+              <div className="text-sm text-muted-foreground">Gondolkodom…</div>
+            )}
+            {error && (
+              <div className="text-sm text-destructive">Hiba: {error}</div>
+            )}
             <div ref={endRef} />
           </div>
         </CardContent>
         <form onSubmit={submit} className="flex gap-2 border-t p-3">
           <Input
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Írd ide a kérdésed..."
+            disabled={loading}
             aria-label="chat"
           />
-          <Button type="submit" size="icon" aria-label="send">
+          <Button type="submit" size="icon" disabled={loading || !input.trim()} aria-label="send">
             <Send className="h-4 w-4" />
           </Button>
         </form>
