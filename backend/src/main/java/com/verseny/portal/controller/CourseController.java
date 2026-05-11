@@ -3,6 +3,8 @@ package com.verseny.portal.controller;
 import com.verseny.portal.model.Course;
 import com.verseny.portal.repository.CourseRepository;
 import com.verseny.portal.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/courses")
+@Tag(name = "Courses (legacy)", description = "Eredeti kurzus minta — referencia, később hasznosítható")
 public class CourseController {
 
     private final CourseRepository courses;
@@ -23,17 +26,20 @@ public class CourseController {
     }
 
     @GetMapping
+    @Operation(summary = "Kurzusok listája")
     public List<Course> list() {
         return courses.findAll();
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Egy kurzus")
     public ResponseEntity<Course> get(@PathVariable Long id) {
         return courses.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN','OKTATO')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPERADMIN','OKTATO')")
+    @Operation(summary = "Új kurzus létrehozása")
     public Course create(@RequestBody Course in, Authentication auth) {
         users.findByEmail(auth.getName()).ifPresent(in::setInstructor);
         in.setId(null);
@@ -41,7 +47,8 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','OKTATO')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPERADMIN','OKTATO')")
+    @Operation(summary = "Kurzus frissítése")
     public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody Course in) {
         return courses.findById(id).map(existing -> {
             existing.setCode(in.getCode());
@@ -53,7 +60,8 @@ public class CourseController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPERADMIN')")
+    @Operation(summary = "Kurzus törlése")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (!courses.existsById(id)) return ResponseEntity.notFound().build();
         courses.deleteById(id);

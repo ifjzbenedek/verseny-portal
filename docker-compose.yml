@@ -10,6 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - portal-data:/var/lib/postgresql/data
+  # CHATBOT_SERVICE_PLACEHOLDER — Window C adds chatbot service here
 
 volumes:
   portal-data:

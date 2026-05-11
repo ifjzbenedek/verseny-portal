@@ -5,6 +5,8 @@ import com.verseny.portal.model.AppUser;
 import com.verseny.portal.model.Role;
 import com.verseny.portal.repository.UserRepository;
 import com.verseny.portal.security.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Auth", description = "Regisztráció és bejelentkezés")
 public class AuthController {
 
     private final UserRepository users;
@@ -25,6 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Új felhasználó regisztrálása")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
         if (users.existsByEmail(req.email())) {
             return ResponseEntity.badRequest().body("Email already in use");
@@ -42,6 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Bejelentkezés JWT tokenért")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req) {
         return users.findByEmail(req.email())
                 .filter(u -> encoder.matches(req.password(), u.getPasswordHash()))
