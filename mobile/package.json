@@ -1,0 +1,28 @@
+{
+  "name": "verseny-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Android (Capacitor) wrap a verseny portál Vite+React frontendjéhez.",
+  "scripts": {
+    "build:web": "npm --prefix ../frontend run build",
+    "sync": "cap sync android",
+    "android": "cap open android",
+    "run:android": "cap run android",
+    "build:apk": "npm run build:web && npm run sync && cd android && gradlew.bat assembleDebug",
+    "doctor": "cap doctor"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/app": "^6.0.2",
+    "@capacitor/camera": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/local-notifications": "^6.1.1",
+    "@capacitor/push-notifications": "^6.0.4",
+    "@capacitor/splash-screen": "^6.0.3",
+    "@capacitor/status-bar": "^6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2",
+    "typescript": "^6.0.3"
+  }
+}

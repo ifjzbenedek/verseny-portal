@@ -6,7 +6,9 @@ Spring Boot + React + TypeScript + Postgres + PWA, JWT auth role-based jogosults
 
 - **Frontend (Vercel)**: <https://verseny-portal.vercel.app>
 - **Backend health (Railway)**: <https://backend-production-9ebe.up.railway.app/api/health>
+- **Chatbot health (Railway)**: <https://chatbot-production-ec9e.up.railway.app/health>
 - **Swagger UI (Railway)**: <https://backend-production-9ebe.up.railway.app/swagger-ui.html>
+- **Android APK (debug)**: [v1.0.0 release](https://github.com/ifjzbenedek/verseny-portal/releases/latest/download/verseny-portal-android.apk) — Capacitor wrap a production frontend felett
 
 A Railway free tier ~15 perc inaktivitás után alvó, az első kérés 30–60 mp-be telhet — utána gyors.
 
@@ -177,9 +179,22 @@ A webalkalmazás reszponzív (Tailwind + shadcn/ui mobile-first defaultokkal). P
 - **PWA service worker** (`vite-plugin-pwa` autoUpdate): offline cache + installálható manifest 192/512 px ikonokkal.
 - **Apple touch icon** iOS PWA-hoz (180×180).
 
-### Tervezett, kihagyott
+### Natív Android alkalmazás (Capacitor)
 
-Külön natív / cross-platform mobil alkalmazás (React Native + Expo) tervben volt (lásd [TASKS/D-mobile-expo.md](TASKS/D-mobile-expo.md)), de a PWA funkcionálisan ugyanazt adja a böngészős Web API-kon át (Geolocation, MediaDevices, Notifications).
+A `mobile/` mappában Capacitor wrap a frontend felett — natív Android APK fordítható belőle, **6 Capacitor plugin** felismerve: Camera, Push Notifications, Local Notifications, App lifecycle, Splash Screen, Status Bar. Az `applicationId` `hu.bme.verseny`.
+
+**Letöltés:** [v1.0.0 release APK](https://github.com/ifjzbenedek/verseny-portal/releases/latest/download/verseny-portal-android.apk) — 7.3 MB, debug-signed. Telepítés: telefonon engedélyezd az "Ismeretlen forrásból" → tap a fájlt → install.
+
+**Saját build:**
+```powershell
+cd mobile
+.\scripts\build-and-sync.ps1 -ApiUrl "https://backend-production-9ebe.up.railway.app"
+cd android
+.\gradlew.bat assembleDebug
+# APK: app/build/outputs/apk/debug/app-debug.apk
+```
+
+Az APK ugyanazt a webview-t használja mint a PWA, de natívan települ + Android push (FCM) integrálható (`google-services.json` az `android/app/`-ba).
 
 ## Production deploy
 
