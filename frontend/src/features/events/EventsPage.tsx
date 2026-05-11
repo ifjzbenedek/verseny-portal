@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CalendarDays, MapPin, Plus, Trash2, User } from 'lucide-react';
+import { CalendarDays, LocateFixed, MapPin, Navigation, Plus, Trash2, User } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { useAuth } from '@/auth/AuthContext';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { EmptyState } from '@/shared/components/EmptyState';
+import { Badge } from '@/shared/components/ui/badge';
+import { useGeolocation } from '@/shared/hooks/useGeolocation';
+import { formatDistance, haversineKm } from '@/shared/lib/distance';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,6 +40,11 @@ export default function EventsPage() {
   const { data, isLoading } = useEvents();
   const del = useDeleteEvent();
   const [createOpen, setCreateOpen] = useState(false);
+  const { position, error: geoError, loading: geoLoading, request: requestGeo } = useGeolocation();
+
+  useEffect(() => {
+    if (geoError) toast.error(geoError);
+  }, [geoError]);
 
   const dateFmt = new Intl.DateTimeFormat(i18n.language, {
     year: 'numeric',
@@ -60,24 +68,44 @@ export default function EventsPage() {
       <PageHeader
         title={t('nav.events')}
         actions={
-          canEdit ? (
-            <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4" />
-                  {t('events.create')}
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>{t('events.create')}</DialogTitle>
-                </DialogHeader>
-                <EventForm onDone={() => setCreateOpen(false)} />
-              </DialogContent>
-            </Dialog>
-          ) : null
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={requestGeo}
+              disabled={geoLoading}
+              aria-label={t('events.locateMe')}
+            >
+              <LocateFixed className="h-4 w-4" />
+              {geoLoading ? t('common.loading') : t('events.locateMe')}
+            </Button>
+            {canEdit ? (
+              <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="h-4 w-4" />
+                    {t('events.create')}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{t('events.create')}</DialogTitle>
+                  </DialogHeader>
+                  <EventForm onDone={() => setCreateOpen(false)} />
+                </DialogContent>
+              </Dialog>
+            ) : null}
+          </div>
         }
       />
+
+      {position && (
+        <p className="mb-4 text-xs text-muted-foreground">
+          {t('events.yourPosition', {
+            lat: position.latitude.toFixed(4),
+            lng: position.longitude.toFixed(4),
+          })}
+        </p>
+      )}
 
       {isLoading ? (
         <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
@@ -133,6 +161,19 @@ export default function EventsPage() {
                     <MapPin className="h-4 w-4" />
                     <span>{e.location}</span>
                   </div>
+                )}
+                {e.latitude !== null && e.longitude !== null && position && (
+                  <Badge variant="secondary" className="w-fit gap-1">
+                    <Navigation className="h-3 w-3" />
+                    {formatDistance(
+                      haversineKm(
+                        position.latitude,
+                        position.longitude,
+                        e.latitude,
+                        e.longitude,
+                      ),
+                    )}
+                  </Badge>
                 )}
                 {e.description && (
                   <p className="text-sm text-foreground/90 line-clamp-4">{e.description}</p>

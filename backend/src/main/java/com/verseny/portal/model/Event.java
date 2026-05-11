@@ -27,6 +27,12 @@ public class Event {
 
     private String location;
 
+    @Column
+    private Double latitude;
+
+    @Column
+    private Double longitude;
+
     @ManyToOne
     @JoinColumn(name = "created_by")
     private AppUser createdBy;

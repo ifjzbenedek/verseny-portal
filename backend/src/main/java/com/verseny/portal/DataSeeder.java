@@ -148,12 +148,12 @@ public class DataSeeder {
 
             // --- Events ---
             ensureEvent(events, admin, "Tanévzáró", "Az iskolaév hivatalos lezárása.",
-                    LocalDateTime.of(2026, 6, 15, 10, 0), null, "Iskolai aula");
+                    LocalDateTime.of(2026, 6, 15, 10, 0), null, "Iskolai aula", 47.4731, 19.0598);
             ensureEvent(events, admin, "Szülői értekezlet",
                     "Aktuális tájékoztató minden osztály szülei számára.",
-                    LocalDateTime.of(2026, 5, 20, 18, 0), null, "Osztálytermek");
+                    LocalDateTime.of(2026, 5, 20, 18, 0), null, "Osztálytermek", 47.4731, 19.0598);
             ensureEvent(events, admin, "Sportnap", "Játékos vetélkedő és csapatsportok.",
-                    LocalDateTime.of(2026, 5, 25, 9, 0), null, "Sportpálya");
+                    LocalDateTime.of(2026, 5, 25, 9, 0), null, "Sportpálya", 47.4733, 19.0605);
 
             // --- Sample messages ---
             if (messages.count() == 0) {
@@ -253,7 +253,8 @@ public class DataSeeder {
     }
 
     private Event ensureEvent(EventRepository events, AppUser createdBy, String title, String description,
-                              LocalDateTime startAt, LocalDateTime endAt, String location) {
+                              LocalDateTime startAt, LocalDateTime endAt, String location,
+                              Double latitude, Double longitude) {
         return events.findAllByOrderByStartAtAsc().stream()
                 .filter(e -> title.equals(e.getTitle()) && startAt.equals(e.getStartAt()))
                 .findFirst()
@@ -263,6 +264,8 @@ public class DataSeeder {
                         .startAt(startAt)
                         .endAt(endAt)
                         .location(location)
+                        .latitude(latitude)
+                        .longitude(longitude)
                         .createdBy(createdBy)
                         .build()));
     }

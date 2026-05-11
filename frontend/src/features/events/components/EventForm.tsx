@@ -23,7 +23,15 @@ export function EventForm({ onDone }: Props) {
     formState: { errors, isSubmitting },
   } = useForm<EventCreateValues>({
     resolver: zodResolver(eventCreateSchema),
-    defaultValues: { title: '', description: '', startAt: '', endAt: '', location: '' },
+    defaultValues: {
+      title: '',
+      description: '',
+      startAt: '',
+      endAt: '',
+      location: '',
+      latitude: '',
+      longitude: '',
+    },
   });
 
   const onSubmit = async (values: EventCreateValues) => {
@@ -74,6 +82,36 @@ export function EventForm({ onDone }: Props) {
       <div className="space-y-1.5">
         <Label htmlFor="event-location">{t('events.location')}</Label>
         <Input id="event-location" {...register('location')} maxLength={255} />
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <Label htmlFor="event-latitude">Szélességi fok</Label>
+          <Input
+            id="event-latitude"
+            type="number"
+            step="any"
+            placeholder="pl. 47.4731 (BME központ)"
+            {...register('latitude')}
+            aria-invalid={Boolean(errors.latitude)}
+          />
+          {errors.latitude && (
+            <p className="text-sm text-destructive">{String(errors.latitude.message)}</p>
+          )}
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="event-longitude">Hosszúsági fok</Label>
+          <Input
+            id="event-longitude"
+            type="number"
+            step="any"
+            placeholder="pl. 19.0598"
+            {...register('longitude')}
+            aria-invalid={Boolean(errors.longitude)}
+          />
+          {errors.longitude && (
+            <p className="text-sm text-destructive">{String(errors.longitude.message)}</p>
+          )}
+        </div>
       </div>
       <div className="flex justify-end gap-2">
         {onDone && (

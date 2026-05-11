@@ -147,7 +147,9 @@
     "location": "Location",
     "create": "New event",
     "deleteTitle": "Delete event",
-    "deleteDescription": "Delete event \"{{title}}\"? This cannot be undone."
+    "deleteDescription": "Delete event \"{{title}}\"? This cannot be undone.",
+    "locateMe": "My location",
+    "yourPosition": "Your location: {{lat}}, {{lng}}"
   },
   "users": {
     "list": "Students",

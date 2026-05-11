@@ -147,7 +147,9 @@
     "location": "Helyszín",
     "create": "Új esemény",
     "deleteTitle": "Esemény törlése",
-    "deleteDescription": "Biztosan törlöd a(z) \"{{title}}\" eseményt? Ez visszavonhatatlan."
+    "deleteDescription": "Biztosan törlöd a(z) \"{{title}}\" eseményt? Ez visszavonhatatlan.",
+    "locateMe": "Helyzetem",
+    "yourPosition": "Helyzeted: {{lat}}, {{lng}}"
   },
   "users": {
     "list": "Hallgatók",
